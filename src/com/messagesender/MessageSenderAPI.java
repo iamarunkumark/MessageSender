@@ -20,7 +20,7 @@ public class MessageSenderAPI {
 	private static final String USERNAME = "2233arunkumar@gmail.com";
 	private static final String SUCCESS = "SUCCESS";
 	private static final String FAILED = "FAILED";
-	private static final boolean ISTEST = true;
+	private static final boolean ISTEST = false;
 	
 	
 	public DeliveryStatusDTO sendBulkSms (List<ExcelContentDTO> excelContentDTOs) {

@@ -56,8 +56,9 @@ public class CommonUtils {
 	public String frameMessage(ExcelContentDTO excelContentDTO) {
 		StringBuilder message = new StringBuilder("");
 		message.append("Dear " + excelContentDTO.getToName()  + ",\n");
-		message.append("Greeting from Anbu!");
+		message.append("Greeting from Anbu Trade Corporation! ");
 		message.append("Your Outstanding balance amount is Rs." + excelContentDTO.getAmount());
+		message.append(" Thank You.");
 		return message.toString();
 	}
 	
