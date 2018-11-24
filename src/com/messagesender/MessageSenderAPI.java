@@ -10,20 +10,22 @@ import java.util.List;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.messagesender.dto.AccountConfigurationDTO;
 import com.messagesender.dto.DeliveryStatusDTO;
 import com.messagesender.dto.ExcelContentDTO;
 import com.messagesender.dto.TextLocalResponseDTO;
+import com.messagesender.utills.CommonUtils;
 
 public class MessageSenderAPI {
 	
-	private static final String HASHCODE = "76100f0f25e52cca94ae26453d31458798cd6463";
-	private static final String USERNAME = "2233arunkumar@gmail.com";
+	private static final String DEFAULTHASHCODE = "76100f0f25e52cca94ae26453d31458798cd6463";
+	private static final String DEFAULTUSERNAME = "2233arunkumar@gmail.com";
 	private static final String SUCCESS = "SUCCESS";
 	private static final String FAILED = "FAILED";
 	private static final boolean ISTEST = false;
+	private static final String JARVERSION = "1.1";
 	
-	
-	public DeliveryStatusDTO sendBulkSms (List<ExcelContentDTO> excelContentDTOs) {
+	public DeliveryStatusDTO sendBulkSms (List<ExcelContentDTO> excelContentDTOs , AccountConfigurationDTO accountConf) {
 		DeliveryStatusDTO deliveryStatusDTO = new DeliveryStatusDTO();
 		try { 
 		long cost = 0;
@@ -31,7 +33,7 @@ public class MessageSenderAPI {
 		List<Integer> failedIndex = new ArrayList<>();
 		long numberDelivered = 0;
 		for ( int i = 1 ; i < excelContentDTOs.size() ; i++ ) {
-			TextLocalResponseDTO textLocalResponseDTO = sendSms(excelContentDTOs.get(i));
+			TextLocalResponseDTO textLocalResponseDTO = sendSms(excelContentDTOs.get(i) , accountConf);
 			if ( SUCCESS.equalsIgnoreCase(textLocalResponseDTO.getStatus())) {
 				cost = cost + textLocalResponseDTO.getCost();
 				numberDelivered = numberDelivered + textLocalResponseDTO.getNumMessages();
@@ -56,11 +58,11 @@ public class MessageSenderAPI {
 	}
 	
 	
-	public TextLocalResponseDTO sendSms(ExcelContentDTO excelContentDTO) {
+	public TextLocalResponseDTO sendSms(ExcelContentDTO excelContentDTO , AccountConfigurationDTO accountConf) {
 		try {
 			// Construct data
-			String usernameField = "username=" + USERNAME;
-			String hashField = "&hash=" + HASHCODE;
+			String usernameField = "username=" + ( ( CommonUtils.isEmpty(accountConf.getMailId()) ) ? DEFAULTUSERNAME : accountConf.getMailId()  );
+			String hashField = "&hash=" +( ( CommonUtils.isEmpty(accountConf.getHashId()) ) ? DEFAULTHASHCODE : accountConf.getHashId() ); 
 			String message = "&message=" + excelContentDTO.getMessage();
 			String sender = "&sender=" + "TXTLCL";
 			String numbers = "&numbers=" + excelContentDTO.getPhoneNumber();
@@ -93,8 +95,8 @@ public class MessageSenderAPI {
 	public String sendSms() {
 		try {
 			// Construct data
-			String username = "username=" + USERNAME;
-			String hash = "&hash=" + HASHCODE;
+			String username = "username=" + DEFAULTUSERNAME;
+			String hash = "&hash=" + DEFAULTHASHCODE;
 			String message = "&message=" + "This is your message";
 			String sender = "&sender=" + "TXTLCL";
 			String numbers = "&numbers=" + "918861634326";
@@ -120,5 +122,9 @@ public class MessageSenderAPI {
 			System.err.println("Error SMS "+e);
 			return "Error "+e;
 		}
+	}
+	
+	public String getVersion () {
+		return JARVERSION;
 	}
 }

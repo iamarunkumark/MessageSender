@@ -4,8 +4,11 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Date;
 import java.util.List;
 
 import org.apache.poi.ss.usermodel.Cell;
@@ -54,10 +57,15 @@ public class CommonUtils {
 	}
 	
 	public String frameMessage(ExcelContentDTO excelContentDTO) {
+		DateFormat dateFormat = new SimpleDateFormat("dd-MMM-yyyy");
+		Date date = new Date();
+		System.out.println(dateFormat.format(date));
 		StringBuilder message = new StringBuilder("");
 		message.append("Dear " + excelContentDTO.getToName()  + ",\n");
 		message.append("Greeting from Anbu Trade Corporation! ");
-		message.append("Your Outstanding balance amount is Rs." + excelContentDTO.getAmount());
+		message.append("Your Outstanding balance amount as on ");
+		message.append(dateFormat.format(date));
+		message.append(" is Rs." + excelContentDTO.getAmount());
 		message.append(" Thank You.");
 		return message.toString();
 	}
