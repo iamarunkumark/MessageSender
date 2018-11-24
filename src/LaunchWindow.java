@@ -11,6 +11,7 @@ import javax.swing.JTextField;
 import javax.swing.SwingConstants;
 
 import com.messagesender.MessageSenderAPI;
+import com.messagesender.dto.AccountConfigurationDTO;
 import com.messagesender.dto.DeliveryStatusDTO;
 import com.messagesender.utills.CommonUtils;
 import java.awt.event.MouseAdapter;
@@ -21,6 +22,8 @@ public class LaunchWindow {
 	private JFrame frame;
 	private JTextField filePathTextField;
 	private JTextArea responseTextArea;
+	private JTextField emailTextField;
+	private JTextField hashIdTextField;
 
 	/**
 	 * Launch the application.
@@ -50,7 +53,7 @@ public class LaunchWindow {
 	 */
 	private void initialize() {
 		frame = new JFrame();
-		frame.setBounds(100, 100, 648, 431);
+		frame.setBounds(100, 100, 796, 554);
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frame.getContentPane().setLayout(null);
 		
@@ -65,7 +68,10 @@ public class LaunchWindow {
 				MessageSenderAPI messageSenderAPI = new MessageSenderAPI();
 				CommonUtils commonUtils = new CommonUtils();
 				String filePath = filePathTextField.getText();
-				DeliveryStatusDTO deliveryStatusDTO = messageSenderAPI.sendBulkSms(commonUtils.readExcel(filePath));
+				AccountConfigurationDTO accountConf = new AccountConfigurationDTO();
+				accountConf.setMailId(emailTextField.getText());
+				accountConf.setHashId(hashIdTextField.getText());
+				DeliveryStatusDTO deliveryStatusDTO = messageSenderAPI.sendBulkSms(commonUtils.readExcel(filePath), accountConf);
 				StringBuilder response = new StringBuilder("");
 				response.append("Transaction Status: ");
 				response.append(deliveryStatusDTO.getStatus());
@@ -94,32 +100,56 @@ public class LaunchWindow {
 			}
 		});
 		btnSend.setFont(new Font("Tahoma", Font.BOLD, 16));
-		btnSend.setBounds(417, 63, 133, 37);
+		btnSend.setBounds(417, 173, 133, 37);
 		frame.getContentPane().add(btnSend);
 		
 		JLabel lblLocalFilePath = new JLabel("Local File Path:");
 		lblLocalFilePath.setHorizontalAlignment(SwingConstants.LEFT);
 		lblLocalFilePath.setFont(new Font("Tahoma", Font.BOLD, 16));
-		lblLocalFilePath.setBounds(10, 63, 143, 37);
+		lblLocalFilePath.setBounds(10, 171, 143, 37);
 		frame.getContentPane().add(lblLocalFilePath);
 		
 		filePathTextField = new JTextField();
 		filePathTextField.setToolTipText("File Path here");
-		filePathTextField.setBounds(163, 63, 190, 37);
+		filePathTextField.setBounds(163, 173, 190, 37);
 		frame.getContentPane().add(filePathTextField);
 		filePathTextField.setColumns(10);
 		
 		JLabel responseLabel = new JLabel("Response:");
 		responseLabel.setToolTipText("Response");
 		responseLabel.setFont(new Font("Tahoma", Font.BOLD, 16));
-		responseLabel.setBounds(10, 121, 133, 37);
+		responseLabel.setBounds(10, 219, 133, 37);
 		frame.getContentPane().add(responseLabel);
 		
 		responseTextArea = new JTextArea();
 		responseTextArea.setToolTipText("Response");
 		responseTextArea.setLineWrap(true);
 		responseTextArea.setEditable(false);
-		responseTextArea.setBounds(10, 180, 540, 175);
+		responseTextArea.setBounds(10, 267, 540, 175);
 		frame.getContentPane().add(responseTextArea);
+		
+		JLabel lblEmailId = new JLabel("Email Id:");
+		lblEmailId.setFont(new Font("Tahoma", Font.BOLD, 16));
+		lblEmailId.setBounds(10, 59, 133, 26);
+		frame.getContentPane().add(lblEmailId);
+		
+		emailTextField = new JTextField();
+		emailTextField.setBounds(163, 59, 190, 26);
+		frame.getContentPane().add(emailTextField);
+		emailTextField.setColumns(10);
+		
+		JLabel lblHashId = new JLabel("Hash Id:");
+		lblHashId.setFont(new Font("Tahoma", Font.BOLD, 16));
+		lblHashId.setBounds(10, 111, 133, 26);
+		frame.getContentPane().add(lblHashId);
+		
+		hashIdTextField = new JTextField();
+		hashIdTextField.setBounds(163, 111, 190, 26);
+		frame.getContentPane().add(hashIdTextField);
+		hashIdTextField.setColumns(10);
+		
+		JLabel lblGenerateFrom = new JLabel("Generate HashId from http://control.textlocal.in/docs/ ");
+		lblGenerateFrom.setBounds(10, 148, 345, 14);
+		frame.getContentPane().add(lblGenerateFrom);
 	}
 }
